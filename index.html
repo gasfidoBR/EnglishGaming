@@ -212,16 +212,18 @@
 /* Mesmo script do arquivo original, sem alteração funcional. */
 document.addEventListener('DOMContentLoaded', () => {
   const QUESTIONS = [
-    { id:1, difficulty:'easy', q:"Which sentence is in the Present Perfect?", opts:["I am going to the store.","She has visited London.","They will finish tomorrow.","He eats breakfast at 8am."], correct:1, explanation:"'She has visited London' uses has + past participle (visited) — Present Perfect.", tip:"Use have/has + past participle: I have eaten, She has seen."},
+    { id:1, difficulty:'easy', q:"Which sentence is in the Present Perfect?", opts:["I am going to the store.","She has visited London.","They will finish tomorrow.","He eats breakfast at 8am."], correct:1, explanation:"'She has visited London' uses have/has + past participle (visited) — Present Perfect.", tip:"Use have/has + past participle: I have eaten, She has seen."},
     { id:2, difficulty:'easy', q:"Choose the correct Present Perfect form:", opts:["They have went.","They have gone.","They have going.","They have go."], correct:1, explanation:"'Gone' is the past participle of 'go' — so 'They have gone.' is correct.", tip:"Verbos irregulares mudam o past participle (go → gone, eat → eaten)."},
     { id:3, difficulty:'medium', q:"Pick the best sentence (use Present Perfect):", opts:["I have lived here since 2010.","I lived here since 2010.","I living here since 2010.","I will live here since 2010."], correct:0, explanation:"Usa-se Present Perfect com 'since' para indicar ação iniciada no passado e que continua até agora.", tip:"Since + ponto no tempo → Present Perfect."},
     { id:4, difficulty:'medium', q:"Which is a question in Present Perfect?", opts:["Have you ever eaten sushi?","Did you ever eat sushi?","Do you ever eat sushi?","Will you ever eat sushi?"], correct:0, explanation:"'Have you ever eaten' usa have + past participle para perguntar sobre experiência.", tip:"Use 'ever' em perguntas no Present Perfect para experiências de vida."},
     { id:5, difficulty:'hard', q:"Choose the sentence that uses Present Perfect with 'for':", opts:["She has worked here for five years.","She worked here for five years.","She is working here for five years.","She will work here for five years."], correct:0, explanation:"For + período de tempo com Present Perfect mostra duração até o presente: 'has worked ... for five years.'", tip:"For + duração → Present Perfect (se a ação continua até agora)."},
-    { id:6, difficulty:'hard', q:"Which sentence emphasizes result (Present Perfect simple) rather than ongoing action?", opts:["He has been running for an hour.","He has run for an hour.","He ran for an hour.","He will be running for an hour."], correct:1, explanation:"'He has run for an hour' pode ser usado para indicar duração com foco no resultado. O continuous enfatiza ação em progresso.", tip:"Simple → resultado / Completed sense. Continuous → duração/ongoing."},
-    { id:7, difficulty:'easy', q:"Complete: 'They ___ already ___ their homework.'", opts:["have / finished","have / finish","has / finished","having / finished"], correct:0, explanation:"'They have already finished' — have + past participle 'finished'.", tip:"Already normalmente aparece entre have e past participle ou depois da frase afirmativa."},
-    { id:8, difficulty:'medium', q:"Choose correct negative Present Perfect:", opts:["She hasn't eaten yet.","She don't eaten yet.","She hasn't ate yet.","She haven't eaten yet."], correct:0, explanation:"Negativa correta: 'hasn't eaten' (has not + past participle).", tip:"Negativa: has/have + not + past participle."},
-    { id:9, difficulty:'hard', q:"Which sentence is NOT Present Perfect?", opts:["I have lived here since 2005.","Did you ever see that movie?","Have you ever seen that movie?","I've just arrived."], correct:1, explanation:"'Did you ever see' é Past Simple — para experiências geralmente usamos Present Perfect: 'Have you ever seen...?'", tip:"'Did' indica Past Simple (tempo definido no passado), 'Have' indica Present Perfect (experiência/relação com presente)."},
-    { id:10, difficulty:'medium', q:"Choose the best option: 'I ___ never ___ to Japan.'", opts:["have / been","have / went","has / been","had / been"], correct:0, explanation:"'have never been' é a forma correta: have + past participle (been).", tip:"'Never' geralmente fica entre have e past participle."}
+    { id:6, difficulty:'easy', q:"Complete the sentence: 'We _____ a new game yet.'", opts:["haven't played","didn't play","haven't been played","don't play"], correct:0, explanation:"'Yet' é usado em frases negativas e perguntas para falar sobre algo que ainda não aconteceu.", tip:"Yet, como advérbio, geralmente vai no final da frase."},
+    { id:7, difficulty:'hard', q:"Which sentence emphasizes result (Present Perfect simple) rather than ongoing action?", opts:["He has been running for an hour.","He has run for an hour.","He ran for an hour.","He will be running for an hour."], correct:1, explanation:"'He has run for an hour' pode ser usado para indicar duração com foco no resultado. O continuous enfatiza ação em progresso.", tip:"Simple → resultado / Completed sense. Continuous → duração/ongoing."},
+    { id:8, difficulty:'easy', q:"Complete: 'They ___ already ___ their homework.'", opts:["have / finished","have / finish","has / finished","having / finished"], correct:0, explanation:"'They have already finished' — have + past participle 'finished'.", tip:"Already normalmente aparece entre have e past participle ou depois da frase afirmativa."},
+    { id:9, difficulty:'medium', q:"Choose correct negative Present Perfect:", opts:["She hasn't eaten yet.","She don't eaten yet.","She hasn't ate yet.","She haven't eaten yet."], correct:0, explanation:"Negativa correta: 'hasn't eaten' (has not + past participle).", tip:"Negativa: has/have + not + past participle."},
+    { id:10, difficulty:'hard', q:"Which sentence is NOT Present Perfect?", opts:["I have lived here since 2005.","Did you ever see that movie?","Have you ever seen that movie?","I've just arrived."], correct:1, explanation:"'Did you ever see' é Past Simple — para experiências geralmente usamos Present Perfect: 'Have you ever seen...?'", tip:"'Did' indica Past Simple (tempo definido no passado), 'Have' indica Present Perfect (experiência/relação com presente)."},
+    { id:11, difficulty:'medium', q:"Choose the best option: 'I ___ never ___ to Japan.'", opts:["have / been","have / went","has / been","had / been"], correct:0, explanation:"'have never been' é a forma correta: have + past participle (been).", tip:"'Never' geralmente fica entre have e past participle."},
+    { id:12, difficulty:'medium', q:"Choose the correct form to complete: 'She _____ her keys, so she can't get in.'", opts:["has lost","lost","is losing","will lose"], correct:0, explanation:"'Has lost' (Present Perfect) é a forma correta pois a ação de perder as chaves aconteceu no passado, mas o resultado (não poder entrar) afeta o presente.", tip:"Use o Present Perfect para ações passadas com um resultado visível no presente."}
   ];
 
   let pool = [], currentIndex = 0, score = 0, streak = 0, timer = null;
@@ -261,9 +263,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function el(id){ return document.getElementById(id); }
   function randShuffle(a){ return a.map(v=>({v, r:Math.random()})).sort((x,y)=>x.r - y.r).map(z=>z.v); }
   function pickQuestions(level){
-    if(level==='all') return randShuffle(QUESTIONS).slice(0,10);
+    // Altera o limite de 10 para 12 (ou o número total de questões se for menor)
+    if(level==='all') return randShuffle(QUESTIONS).slice(0,12);
     const filtered = QUESTIONS.filter(q=>q.difficulty===level);
-    return randShuffle(filtered).slice(0, Math.min(10, filtered.length));
+    return randShuffle(filtered).slice(0, Math.min(12, filtered.length));
   }
 
   function startGame(level='all'){
@@ -278,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     explanationArea.style.display = 'none'; correctMark.textContent = '';
     const q = pool[currentIndex];
     questionText.textContent = q.q;
+    // Atualiza a contagem total de questões para o tamanho do pool
     qCounter.textContent = `Questão ${currentIndex+1} / ${pool.length}`;
     timeLeft = timePerQuestion; timeLeftEl.textContent = timeLeft + 's';
     progBar.style.width = `${(currentIndex / pool.length) * 100}%`; optionsWrap.innerHTML = '';
