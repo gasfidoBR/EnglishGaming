@@ -3,44 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EnglishGaming — Present Perfect Quiz (Dark)</title>
+  <title>EnglishGaming — Present Perfect Quiz (Light)</title>
   <style>
     :root{
-      --bg:#0f1724;            /* fundo escuro */
-      --card:#0b1220;          /* cartão/containers */
-      --muted:#9ca3af;         /* texto secundário claro */
-      --accent:#7c3aed;        /* cor de destaque (roxo) */
+      --bg:#eef2f9;            /* fundo claro */
+      --card:#ffffff;          /* cartão/containers */
+      --muted:#6b7280;         /* texto secundário escuro */
+      --accent:#0ea5e9;        /* cor de destaque (azul claro) */
       --success:#16a34a;
       --danger:#ef4444;
-      --glass: rgba(255,255,255,0.02);
-      --shadow: 0 10px 30px rgba(2,6,23,0.6);
+      --glass: rgba(0,0,0,0.02);
+      --shadow: 0 10px 30px rgba(10,25,45,0.08);
       --radius:16px;
-      --text:#e6eef8;          /* texto principal */
+      --text:#1f2937;          /* texto principal */
     }
-    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+    *{box-sizing:border-box;font-family:Segoe UI, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial; }
     html,body{height:100%;margin:0;background:var(--bg);color:var(--text)}
     .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px}
-    .container{width:100%;max-width:1150px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 360px;gap:20px}
+    .container{width:100%;max-width:1150px;background:linear-gradient(180deg, rgba(255,255,255,1), rgba(248,251,254,1));border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 360px;gap:20px}
     @media(max-width:900px){ .container{grid-template-columns:1fr; padding:14px} .sidebar{order:2} }
     header h1{margin:0;font-size:26px;letter-spacing:-0.5px}
     header p{margin:4px 0 0;color:var(--muted);font-size:13px}
-    .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
+    .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(0,0,0,0.04)}
     .small{font-size:13px;color:var(--muted)}
     .controls{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{background:var(--accent);color:#fff;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(124,58,237,0.12)}
-    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(124,58,237,0.12)}
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.06)}
+    .btn{background:var(--accent);color:#fff;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(14,165,233,0.25)}
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(14,165,233,0.25)}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid rgba(0,0,0,0.08)}
     .btn:disabled{opacity:0.45;cursor:not-allowed}
     .q-title{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
     .options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     @media(max-width:700px){ .options{grid-template-columns:1fr} }
-    .option{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--text)}
-    .option.correct{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.25)}
+    .option{padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);background:rgba(0,0,0,0.01);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--text)}
+    .option.correct{background:rgba(16,163,74,0.12);border-color:rgba(16,163,74,0.25)}
     .option.wrong{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.25)}
     .meta{display:flex;gap:12px;align-items:center}
-    .timer{font-weight:700;background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:var(--text)}
-    .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
-    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#06b6d4)}
+    .timer{font-weight:700;background:rgba(0,0,0,0.02);padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.04);color:var(--text)}
+    .progress{height:10px;background:rgba(0,0,0,0.04);border-radius:999px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#38bdf8)}
     .lifelines{display:flex;gap:8px}
     .hint-text{font-size:13px;color:var(--muted);margin-top:8px}
     .leaderboard ol{padding-left:18px;margin:8px 0}
@@ -48,21 +48,21 @@
     .study ul{margin:6px 0 0 18px}
     footer{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
     .muted{color:var(--muted)}
-    .kbd{background:rgba(255,255,255,0.02);padding:4px 6px;border-radius:6px;font-size:12px;color:var(--text)}
-    .option:focus{outline:3px solid rgba(124,58,237,0.18)}
-    input, select{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+    .kbd{background:rgba(0,0,0,0.04);padding:4px 6px;border-radius:6px;font-size:12px;color:var(--text)}
+    .option:focus{outline:3px solid rgba(14,165,233,0.18)}
+    input, select{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text)}
     /* small responsive adjustments */
     .sidebar .card{margin-bottom:12px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="container" role="application" aria-label="EnglishGaming Present Perfect Quiz (Dark)">
+    <div class="container" role="application" aria-label="EnglishGaming Present Perfect Quiz (Light)">
       <main>
         <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <div>
             <h1>EnglishGaming</h1>
-            <p>Present Perfect — Quiz interativo (Dark UI)</p>
+            <p>Present Perfect — Quiz interativo (Light UI)</p>
             <div class="small muted" id="playerLabel">Player: <strong id="playerNameLabel">Guest</strong></div>
           </div>
           <div class="meta">
@@ -93,9 +93,9 @@
               <strong>Recursos:</strong> temporizador (30s por pergunta), lifelines (50/50 e Hint), explicações, leaderboard local, modo revisão e dicas de gramática.
             </div>
 
-            <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+            <hr style="margin:12px 0;border:none;border-top:1px solid rgba(0,0,0,0.05)">
 
-            <div class="card" style="background:rgba(255,255,255,0.01)">
+            <div class="card" style="background:rgba(0,0,0,0.01)">
               <strong style="color:var(--text)">Como jogar</strong>
               <ol style="padding-left:18px;margin:8px 0 0;color:var(--muted)">
                 <li>Escolha dificuldade (opcional) e clique em <span class="kbd">Iniciar jogo</span>.</li>
@@ -209,8 +209,7 @@
   <footer class="muted">EnglishGaming — present perfect quiz • Salve como <strong>englishgaming.html</strong></footer>
 
 <script>
-/* Mesmo script do arquivo anterior — sem alteração funcional, apenas UI dark.
-   Colei o script completo para o arquivo rodar offline. */
+/* Mesmo script do arquivo original, sem alteração funcional. */
 document.addEventListener('DOMContentLoaded', () => {
   const QUESTIONS = [
     { id:1, difficulty:'easy', q:"Which sentence is in the Present Perfect?", opts:["I am going to the store.","She has visited London.","They will finish tomorrow.","He eats breakfast at 8am."], correct:1, explanation:"'She has visited London' uses has + past participle (visited) — Present Perfect.", tip:"Use have/has + past participle: I have eaten, She has seen."},
