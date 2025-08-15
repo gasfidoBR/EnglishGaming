@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EnglishGaming — Present Perfect Quiz (Dark)</title>
+  <style>
+    :root{
+      --bg:#0f1724;            /* fundo escuro */
+      --card:#0b1220;          /* cartão/containers */
+      --muted:#9ca3af;         /* texto secundário claro */
+      --accent:#7c3aed;        /* cor de destaque (roxo) */
+      --success:#16a34a;
+      --danger:#ef4444;
+      --glass: rgba(255,255,255,0.02);
+      --shadow: 0 10px 30px rgba(2,6,23,0.6);
+      --radius:16px;
+      --text:#e6eef8;          /* texto principal */
+    }
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--text)}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px}
+    .container{width:100%;max-width:1150px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 360px;gap:20px}
+    @media(max-width:900px){ .container{grid-template-columns:1fr; padding:14px} .sidebar{order:2} }
+    header h1{margin:0;font-size:26px;letter-spacing:-0.5px}
+    header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
+    .small{font-size:13px;color:var(--muted)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{background:var(--accent);color:#fff;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(124,58,237,0.12)}
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(124,58,237,0.12)}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.06)}
+    .btn:disabled{opacity:0.45;cursor:not-allowed}
+    .q-title{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    @media(max-width:700px){ .options{grid-template-columns:1fr} }
+    .option{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--text)}
+    .option.correct{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.25)}
+    .option.wrong{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.25)}
+    .meta{display:flex;gap:12px;align-items:center}
+    .timer{font-weight:700;background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:var(--text)}
+    .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#06b6d4)}
+    .lifelines{display:flex;gap:8px}
+    .hint-text{font-size:13px;color:var(--muted);margin-top:8px}
+    .leaderboard ol{padding-left:18px;margin:8px 0}
+    .leaderboard li{margin:6px 0;display:flex;justify-content:space-between}
+    .study ul{margin:6px 0 0 18px}
+    footer{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
+    .muted{color:var(--muted)}
+    .kbd{background:rgba(255,255,255,0.02);padding:4px 6px;border-radius:6px;font-size:12px;color:var(--text)}
+    .option:focus{outline:3px solid rgba(124,58,237,0.18)}
+    input, select{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+    /* small responsive adjustments */
+    .sidebar .card{margin-bottom:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="container" role="application" aria-label="EnglishGaming Present Perfect Quiz (Dark)">
+      <main>
+        <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div>
+            <h1>EnglishGaming</h1>
+            <p>Present Perfect — Quiz interativo (Dark UI)</p>
+            <div class="small muted" id="playerLabel">Player: <strong id="playerNameLabel">Guest</strong></div>
+          </div>
+          <div class="meta">
+            <div class="small muted">Score: <strong id="score">0</strong></div>
+            <div class="small muted">Streak: <strong id="streak">0</strong></div>
+          </div>
+        </header>
+
+        <section class="card" aria-live="polite" id="gameArea">
+          <div id="startScreen">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+              <input id="playerName" placeholder="Seu nome (opcional)" style="flex:1;padding:10px;border-radius:8px" />
+              <select id="difficulty" style="padding:10px;border-radius:8px">
+                <option value="all">Todos (fácil/médio/difícil)</option>
+                <option value="easy">Fácil</option>
+                <option value="medium">Médio</option>
+                <option value="hard">Difícil</option>
+              </select>
+            </div>
+
+            <div class="controls" style="margin-bottom:10px">
+              <button class="btn" id="startBtn">Iniciar jogo</button>
+              <button class="btn secondary" id="reviewBtn">Modo revisão</button>
+              <button class="btn ghost" id="exportBtn">Exportar leaderboard (JSON)</button>
+            </div>
+
+            <div class="small muted">
+              <strong>Recursos:</strong> temporizador (30s por pergunta), lifelines (50/50 e Hint), explicações, leaderboard local, modo revisão e dicas de gramática.
+            </div>
+
+            <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+            <div class="card" style="background:rgba(255,255,255,0.01)">
+              <strong style="color:var(--text)">Como jogar</strong>
+              <ol style="padding-left:18px;margin:8px 0 0;color:var(--muted)">
+                <li>Escolha dificuldade (opcional) e clique em <span class="kbd">Iniciar jogo</span>.</li>
+                <li>Responda cada pergunta antes do tempo acabar (30s). Você ganha bônus por rapidez e por sequência correta.</li>
+                <li>Use 50/50 para eliminar duas opções erradas ou Hint para uma sugestão.</li>
+                <li>Após responder, veja explicação e prossiga para a próxima pergunta.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div id="questionScreen" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div class="small muted" id="qCounter">Questão 1 / 10</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div class="timer" id="timeLeft">30s</div>
+              </div>
+            </div>
+
+            <div class="q-title" id="questionText">Pergunta aparecerá aqui</div>
+
+            <div class="options" id="optionsWrap" role="listbox" aria-label="Opções de resposta"></div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="lifelines">
+                <button class="btn ghost" id="btn5050">50/50</button>
+                <button class="btn ghost" id="btnHint">Hint</button>
+                <button class="btn ghost" id="pauseBtn">Pause</button>
+              </div>
+
+              <div style="width:45%;min-width:180px">
+                <div class="small muted">Progresso</div>
+                <div class="progress" aria-hidden="true" style="margin-top:6px">
+                  <i id="progBar" style="width:0%"></i>
+                </div>
+              </div>
+            </div>
+
+            <div id="explanationArea" style="display:none;margin-top:12px" class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="font-weight:700;color:var(--text)">Explicação</div>
+                <div class="small muted" id="correctMark"></div>
+              </div>
+              <div id="explanationText" class="hint-text"></div>
+              <div id="grammarTip" class="hint-text" style="margin-top:6px;font-size:13px;color:var(--muted)"></div>
+              <div style="text-align:right;margin-top:8px">
+                <button class="btn" id="nextBtn">Próxima</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="endScreen" style="display:none">
+            <div style="text-align:center">
+              <h2 style="margin:0">Fim do jogo</h2>
+              <p class="small muted">Pontuação final</p>
+              <div style="font-size:28px;font-weight:800" id="finalScore">0</div>
+              <div class="small muted">Obrigado por jogar!</div>
+            </div>
+
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+              <button class="btn" id="playAgain">Jogar novamente</button>
+              <button class="btn secondary" id="reviewAfterPlay">Abrir revisão</button>
+            </div>
+          </div>
+
+        </section>
+
+        <aside class="sidebar">
+          <div class="card leaderboard">
+            <strong style="color:var(--text)">Leaderboard</strong>
+            <ol id="leaderList" class="muted" aria-live="polite">
+              <li class="muted">Sem pontuações — jogue para aparecer aqui</li>
+            </ol>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn ghost" id="resetLb">Reset</button>
+              <button class="btn ghost" id="downloadLb">Baixar JSON</button>
+            </div>
+          </div>
+
+          <div class="card study" style="margin-top:12px">
+            <strong style="color:var(--text)">Study Corner — Present Perfect</strong>
+            <div class="small muted" style="margin-top:10px">
+              <ul>
+                <li><strong>Forma:</strong> have/has + past participle (have eaten, has seen).</li>
+                <li><strong>Usos:</strong> experiência (I've been to Paris), duração (I have lived here for 3 years), ações recentes com resultado (She has finished her work).</li>
+                <li><strong>Palavras comuns:</strong> ever, never, already, yet, for, since.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="margin-top:12px" class="card">
+            <strong style="color:var(--text)">Modos rápidos</strong>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <button class="btn ghost" id="easyMode">Fácil</button>
+              <button class="btn ghost" id="medMode">Médio</button>
+              <button class="btn ghost" id="hardMode">Difícil</button>
+            </div>
+
+            <div style="margin-top:10px" class="small muted">
+              Dica: respostas rápidas valem mais pontos.
+            </div>
+          </div>
+
+          <div style="margin-top:12px" class="card small muted">
+            Versão offline — salve este arquivo e abra no navegador. Desenvolvido para estudo do Present Perfect.
+          </div>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <footer class="muted">EnglishGaming — present perfect quiz • Salve como <strong>englishgaming.html</strong></footer>
+
+<script>
+/* Mesmo script do arquivo anterior — sem alteração funcional, apenas UI dark.
+   Colei o script completo para o arquivo rodar offline. */
+document.addEventListener('DOMContentLoaded', () => {
+  const QUESTIONS = [
+    { id:1, difficulty:'easy', q:"Which sentence is in the Present Perfect?", opts:["I am going to the store.","She has visited London.","They will finish tomorrow.","He eats breakfast at 8am."], correct:1, explanation:"'She has visited London' uses has + past participle (visited) — Present Perfect.", tip:"Use have/has + past participle: I have eaten, She has seen."},
+    { id:2, difficulty:'easy', q:"Choose the correct Present Perfect form:", opts:["They have went.","They have gone.","They have going.","They have go."], correct:1, explanation:"'Gone' is the past participle of 'go' — so 'They have gone.' is correct.", tip:"Verbos irregulares mudam o past participle (go → gone, eat → eaten)."},
+    { id:3, difficulty:'medium', q:"Pick the best sentence (use Present Perfect):", opts:["I have lived here since 2010.","I lived here since 2010.","I living here since 2010.","I will live here since 2010."], correct:0, explanation:"Usa-se Present Perfect com 'since' para indicar ação iniciada no passado e que continua até agora.", tip:"Since + ponto no tempo → Present Perfect."},
+    { id:4, difficulty:'medium', q:"Which is a question in Present Perfect?", opts:["Have you ever eaten sushi?","Did you ever eat sushi?","Do you ever eat sushi?","Will you ever eat sushi?"], correct:0, explanation:"'Have you ever eaten' usa have + past participle para perguntar sobre experiência.", tip:"Use 'ever' em perguntas no Present Perfect para experiências de vida."},
+    { id:5, difficulty:'hard', q:"Choose the sentence that uses Present Perfect with 'for':", opts:["She has worked here for five years.","She worked here for five years.","She is working here for five years.","She will work here for five years."], correct:0, explanation:"For + período de tempo com Present Perfect mostra duração até o presente: 'has worked ... for five years.'", tip:"For + duração → Present Perfect (se a ação continua até agora)."},
+    { id:6, difficulty:'hard', q:"Which sentence emphasizes result (Present Perfect simple) rather than ongoing action?", opts:["He has been running for an hour.","He has run for an hour.","He ran for an hour.","He will be running for an hour."], correct:1, explanation:"'He has run for an hour' pode ser usado para indicar duração com foco no resultado. O continuous enfatiza ação em progresso.", tip:"Simple → resultado / Completed sense. Continuous → duração/ongoing."},
+    { id:7, difficulty:'easy', q:"Complete: 'They ___ already ___ their homework.'", opts:["have / finished","have / finish","has / finished","having / finished"], correct:0, explanation:"'They have already finished' — have + past participle 'finished'.", tip:"Already normalmente aparece entre have e past participle ou depois da frase afirmativa."},
+    { id:8, difficulty:'medium', q:"Choose correct negative Present Perfect:", opts:["She hasn't eaten yet.","She don't eaten yet.","She hasn't ate yet.","She haven't eaten yet."], correct:0, explanation:"Negativa correta: 'hasn't eaten' (has not + past participle).", tip:"Negativa: has/have + not + past participle."},
+    { id:9, difficulty:'hard', q:"Which sentence is NOT Present Perfect?", opts:["I have lived here since 2005.","Did you ever see that movie?","Have you ever seen that movie?","I've just arrived."], correct:1, explanation:"'Did you ever see' é Past Simple — para experiências geralmente usamos Present Perfect: 'Have you ever seen...?'", tip:"'Did' indica Past Simple (tempo definido no passado), 'Have' indica Present Perfect (experiência/relação com presente)."},
+    { id:10, difficulty:'medium', q:"Choose the best option: 'I ___ never ___ to Japan.'", opts:["have / been","have / went","has / been","had / been"], correct:0, explanation:"'have never been' é a forma correta: have + past participle (been).", tip:"'Never' geralmente fica entre have e past participle."}
+  ];
+
+  let pool = [], currentIndex = 0, score = 0, streak = 0, timer = null;
+  let timePerQuestion = 30, timeLeft = timePerQuestion, isPaused = false, used5050 = false, usedHint = false, revealed = false;
+  let leaderboard = loadLeaderboard();
+
+  const startBtn = el('startBtn'), reviewBtn = el('reviewBtn'), exportBtn = el('exportBtn');
+  const playerNameInput = el('playerName'), playerLabel = el('playerNameLabel');
+  const difficultySelect = el('difficulty');
+  const startScreen = el('startScreen'), questionScreen = el('questionScreen'), endScreen = el('endScreen');
+  const questionText = el('questionText'), optionsWrap = el('optionsWrap');
+  const timeLeftEl = el('timeLeft'), qCounter = el('qCounter'), progBar = el('progBar');
+  const btn5050 = el('btn5050'), btnHint = el('btnHint'), pauseBtn = el('pauseBtn'), nextBtn = el('nextBtn');
+  const explanationArea = el('explanationArea'), explanationText = el('explanationText'), grammarTip = el('grammarTip'), correctMark = el('correctMark');
+  const scoreEl = el('score'), streakEl = el('streak'), finalScore = el('finalScore');
+  const leaderList = el('leaderList'), resetLb = el('resetLb'), downloadLb = el('downloadLb');
+  const startEasy = el('easyMode'), startMed = el('medMode'), startHard = el('hardMode');
+  const playAgain = el('playAgain'), reviewAfterPlay = el('reviewAfterPlay');
+
+  updateLeaderboardUI();
+
+  startBtn.addEventListener('click', ()=>startGame(difficultySelect.value));
+  startEasy.addEventListener('click', ()=>{ difficultySelect.value='easy'; startGame('easy');});
+  startMed.addEventListener('click', ()=>{ difficultySelect.value='medium'; startGame('medium');});
+  startHard.addEventListener('click', ()=>{ difficultySelect.value='hard'; startGame('hard');});
+  reviewBtn.addEventListener('click', openReviewMode);
+  exportBtn.addEventListener('click', ()=>downloadJSON(JSON.stringify(leaderboard), 'leaderboard.json'));
+  btn5050.addEventListener('click', apply5050);
+  btnHint.addEventListener('click', applyHint);
+  pauseBtn.addEventListener('click', togglePause);
+  nextBtn.addEventListener('click', nextQuestion);
+  resetLb.addEventListener('click', resetLeaderboard);
+  downloadLb.addEventListener('click', ()=>downloadJSON(JSON.stringify(leaderboard), 'leaderboard.json'));
+  playAgain.addEventListener('click', ()=>startGame(difficultySelect.value||'all'));
+  reviewAfterPlay.addEventListener('click', openReviewMode);
+
+  function el(id){ return document.getElementById(id); }
+  function randShuffle(a){ return a.map(v=>({v, r:Math.random()})).sort((x,y)=>x.r - y.r).map(z=>z.v); }
+  function pickQuestions(level){
+    if(level==='all') return randShuffle(QUESTIONS).slice(0,10);
+    const filtered = QUESTIONS.filter(q=>q.difficulty===level);
+    return randShuffle(filtered).slice(0, Math.min(10, filtered.length));
+  }
+
+  function startGame(level='all'){
+    const player = (playerNameInput.value||'Guest').trim();
+    playerLabel.textContent = player || 'Guest';
+    pool = pickQuestions(level);
+    currentIndex = 0; score = 0; streak = 0; used5050 = false; usedHint = false; revealed = false;
+    updateScoreUI(); showScreen('question'); renderQuestion();
+  }
+
+  function renderQuestion(){
+    explanationArea.style.display = 'none'; correctMark.textContent = '';
+    const q = pool[currentIndex];
+    questionText.textContent = q.q;
+    qCounter.textContent = `Questão ${currentIndex+1} / ${pool.length}`;
+    timeLeft = timePerQuestion; timeLeftEl.textContent = timeLeft + 's';
+    progBar.style.width = `${(currentIndex / pool.length) * 100}%`; optionsWrap.innerHTML = '';
+    q.opts.forEach((opt,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'option'; btn.tabIndex = 0; btn.setAttribute('role','option');
+      btn.innerHTML = `<span><strong>${String.fromCharCode(65+i)}.</strong> <span style="margin-left:8px">${opt}</span></span><span class="muted" aria-hidden="true"></span>`;
+      btn.addEventListener('click', ()=>selectOption(i, btn));
+      optionsWrap.appendChild(btn);
+    });
+    btn5050.disabled = used5050; btnHint.disabled = usedHint; isPaused = false; pauseBtn.textContent = 'Pause'; startTimer();
+  }
+
+  function selectOption(index, btn){
+    if(revealed) return; stopTimer();
+    const q = pool[currentIndex]; const isCorrect = index === q.correct; revealed = true;
+    if(isCorrect){ btn.classList.add('correct'); streak += 1; const gained = 100 + Math.floor(timeLeft*2) + (streak-1)*10; score += gained; correctMark.textContent = '✔️ Correct!'; }
+    else { btn.classList.add('wrong'); streak = 0; correctMark.textContent = '❌ Wrong'; const correctBtn = optionsWrap.children[q.correct]; if(correctBtn) correctBtn.classList.add('correct'); }
+    updateScoreUI();
+    explanationText.textContent = q.explanation;
+    grammarTip.textContent = 'Tip: ' + q.tip;
+    explanationArea.style.display = 'block';
+    progBar.style.width = `${((currentIndex + 1) / pool.length) * 100}%`;
+  }
+
+  function apply5050(){ if(used5050 || revealed) return; used5050 = true; btn5050.disabled = true;
+    const q = pool[currentIndex]; const wrongIndexes = []; for(let i=0;i<q.opts.length;i++) if(i!==q.correct) wrongIndexes.push(i);
+    shuffleArray(wrongIndexes); const hide = wrongIndexes.slice(1); hide.forEach(i=>{ const btn = optionsWrap.children[i]; if(btn) btn.style.visibility = 'hidden'; });
+  }
+
+  function applyHint(){ if(usedHint || revealed) return; usedHint = true; btnHint.disabled = true;
+    const q = pool[currentIndex]; const btn = optionsWrap.children[q.correct]; if(btn){ const small = btn.querySelector('.muted'); if(small) small.textContent = 'Tip → likely correct'; btn.focus(); }
+  }
+
+  function togglePause(){ if(isPaused){ startTimer(); isPaused=false; pauseBtn.textContent='Pause'; } else { stopTimer(); isPaused=true; pauseBtn.textContent='Resume'; } }
+
+  function startTimer(){ stopTimer(); timeLeftEl.textContent = timeLeft + 's'; timer = setInterval(()=>{ timeLeft--; timeLeftEl.textContent = timeLeft + 's'; if(timeLeft <=0){ clearInterval(timer); onTimeUp(); } },1000); }
+  function stopTimer(){ if(timer) clearInterval(timer); timer=null; }
+
+  function onTimeUp(){ revealed=true; streak=0; updateScoreUI(); const q = pool[currentIndex]; correctMark.textContent='⏰ Time up!'; const correctBtn = optionsWrap.children[q.correct]; if(correctBtn) correctBtn.classList.add('correct'); explanationText.textContent = 'O tempo acabou. ' + q.explanation; grammarTip.textContent = 'Tip: ' + q.tip; explanationArea.style.display='block'; progBar.style.width = `${((currentIndex + 1) / pool.length) * 100}%`; }
+
+  function nextQuestion(){ revealed=false; explanationArea.style.display='none'; currentIndex++; if(currentIndex >= pool.length){ endGame(); return; } renderQuestion(); }
+
+  function endGame(){ stopTimer(); showScreen('end'); finalScore.textContent = score; saveScoreToLeaderboard(); updateLeaderboardUI(); }
+
+  function saveScoreToLeaderboard(){ const name = (playerNameInput.value||'Guest').trim(); const entry = { name: name || 'Guest', score: score, date: new Date().toISOString() }; leaderboard.push(entry); leaderboard.sort((a,b)=>b.score - a.score); if(leaderboard.length>10) leaderboard = leaderboard.slice(0,10); localStorage.setItem('englishgaming_leaderboard', JSON.stringify(leaderboard)); }
+
+  function loadLeaderboard(){ try{ const raw = localStorage.getItem('englishgaming_leaderboard'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+
+  function updateLeaderboardUI(){ leaderboard = loadLeaderboard(); leaderList.innerHTML = ''; if(leaderboard.length===0){ const li = document.createElement('li'); li.className='muted'; li.textContent = 'Sem pontuações — jogue para aparecer aqui'; leaderList.appendChild(li); return; } leaderboard.forEach(entry=>{ const li = document.createElement('li'); li.innerHTML = `<span>${entry.name}</span><strong>${entry.score}</strong>`; leaderList.appendChild(li); }); }
+
+  function resetLeaderboard(){ if(!confirm('Resetar leaderboard local?')) return; localStorage.removeItem('englishgaming_leaderboard'); leaderboard=[]; updateLeaderboardUI(); }
+
+  function downloadJSON(content, filename){ const blob = new Blob([content], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
+
+  function openReviewMode(){ let html = `<html><head><meta charset="utf-8"><title>Review — EnglishGaming</title><style>body{font-family:Inter,Arial;padding:18px;color:#111} .q{border:1px solid #eee;padding:12px;border-radius:8px;margin-bottom:10px}</style></head><body><h2>Review Mode — All Questions</h2>`; QUESTIONS.forEach(q=>{ html += `<div class="q"><div style="font-weight:700">${q.q}</div><div style="margin-top:6px"><strong>Answer:</strong> ${q.opts[q.correct]}</div><div style="margin-top:6px;color:#555">${q.explanation}</div></div>`; }); html += '</body></html>'; const w = window.open(); w.document.write(html); w.document.close(); }
+
+  function updateScoreUI(){ scoreEl.textContent = score; streakEl.textContent = streak; }
+  function showScreen(screen){ startScreen.style.display = screen==='start' ? '' : 'none'; questionScreen.style.display = screen==='question' ? '' : 'none'; endScreen.style.display = screen==='end' ? '' : 'none'; }
+  function shuffleArray(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
+
+  showScreen('start');
+  document.addEventListener('keydown', (e)=>{ if(e.key===' ' && questionScreen.style.display!=='none'){ e.preventDefault(); togglePause(); } });
+});
+</script>
+</body>
+</html>
